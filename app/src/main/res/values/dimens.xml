@@ -1,5 +1,7 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="splash_reddit_icon_margin_bottom">100dp</dimen>
+    <dimen name="reddit_icon_height_weight">4</dimen>
+    <dimen name="progress_bar_size">42dp</dimen>
 </resources>

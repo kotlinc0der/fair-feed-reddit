@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:weightSum="10"
+    tools:context=".ui.SplashActivity">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="@dimen/reddit_icon_height_weight"
+        android:src="@drawable/splash_icon"
+        android:layout_marginBottom="@dimen/splash_reddit_icon_margin_bottom"
+        android:contentDescription="@string/reddit_icon" />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ProgressBar
+            android:id="@+id/splash_pg"
+            android:layout_width="@dimen/progress_bar_size"
+            android:layout_height="@dimen/progress_bar_size"
+            android:layout_gravity="center"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/splash_login_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:textAllCaps="false"
+            android:padding="15dp"
+            android:background="@color/colorPrimary"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            style="@style/Widget.MaterialComponents.Button.Icon"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="@string/login_to_reddit_account"/>
+    </FrameLayout>
+</LinearLayout>

@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="splash_reddit_icon_margin_bottom">50dp</dimen>
+    <dimen name="reddit_icon_height_weight">5</dimen>
+</resources>
