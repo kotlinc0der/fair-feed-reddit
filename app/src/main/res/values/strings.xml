@@ -13,4 +13,32 @@
     <string name="reddit_icon">Reddit Icon</string>
     <string name="reddit_client_id">gv6KGFG2ZRc7CA</string>
     <string name="reddit_redirect_url">http://www.example.com/my_redirect</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="title_settings">Settings</string>
+    <string name="logout_account_key">logout_account</string>
+    <string name="logout_account_title">Logout of reddit</string>
+    <string name="clear_bookmarked_posts_key">clear_bookmarked_posts</string>
+    <string name="clear_bookmarked_posts_title">Clear all bookmarked posts</string>
+    <string name="clear_show_less_often_key">clear_show_less_often</string>
+    <string name="clear_show_less_often_title">Clear subreddits</string>
+    <string name="show_less_often_posts_key">show_less_often_posts</string>
+    <string name="show_less_often_posts_title">Number of visible posts per day</string>
+    <string name="clear_bookmarks_message">Are you sure you want to clear all the bookmarked reddit posts?</string>
+    <string name="logout_message">Are you sure you want to logout of your reddit account?</string>
+    <string name="clear_show_less_often_message">Are you sure you want to clear \'show less often\' for all your subreddits?</string>
 </resources>

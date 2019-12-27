@@ -4,6 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.example.fairfeedreddit.App;
+
+import java.util.List;
+
+import static com.example.fairfeedreddit.utils.AppConstants.DEFAULT_SHOW_LESS_OFTEN_POSTS;
+import static com.example.fairfeedreddit.utils.AppConstants.SHOW_LESS_OFTEN_POSTS_FOR_X_KEY;
+
 public class SharedPreferenceUtils {
     private static SharedPreferences preferences;
 
@@ -16,6 +23,25 @@ public class SharedPreferenceUtils {
                     preferences = PreferenceManager.getDefaultSharedPreferences(context);
                 }
             }
+        }
+    }
+
+    public static int getShowLessOftenPosts() {
+        List<String> usernames = App.getTokenStore().getUsernames();
+        if (!usernames.isEmpty()) {
+            String showLessOftenPostsKey = String.format(SHOW_LESS_OFTEN_POSTS_FOR_X_KEY, usernames.get(0));
+            return preferences.getInt(showLessOftenPostsKey, DEFAULT_SHOW_LESS_OFTEN_POSTS);
+        }
+        return DEFAULT_SHOW_LESS_OFTEN_POSTS;
+    }
+
+    public static void setShowLessOftenPosts(int postsPerDay) {
+        List<String> usernames = App.getTokenStore().getUsernames();
+        if (!usernames.isEmpty()) {
+            String showLessOftenPostsKey = String.format(SHOW_LESS_OFTEN_POSTS_FOR_X_KEY, usernames.get(0));
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putInt(showLessOftenPostsKey, postsPerDay);
+            editor.apply();
         }
     }
 
