@@ -12,10 +12,10 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.fairfeedreddit.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_subreddits"
+        android:name="com.example.fairfeedreddit.ui.subreddits.SubredditsFragment"
+        android:label="@string/title_subreddits"
+        tools:layout="@layout/fragment_subreddits" />
 
     <fragment
         android:id="@+id/navigation_notifications"
@@ -26,6 +26,6 @@
     <fragment
         android:id="@+id/navigation_settings"
         android:name="com.example.fairfeedreddit.ui.settings.SettingsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:label="@string/title_settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>

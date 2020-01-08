@@ -3,13 +3,17 @@ package com.example.fairfeedreddit.ui.settings;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.example.fairfeedreddit.App;
 import com.example.fairfeedreddit.R;
+import com.example.fairfeedreddit.database.AppDatabase;
+import com.example.fairfeedreddit.utils.AppExecutors;
 import com.example.fairfeedreddit.utils.SharedPreferenceUtils;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
 
@@ -22,11 +26,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     private AlertDialog.Builder clearBookmarksDialog;
     private AlertDialog.Builder logoutDialog;
 
+    private Snackbar snackbar;
+
     public SettingsFragment() {}
+
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        setPreferencesFromResource(R.xml.root_preferences, rootKey);
+        setPreferencesFromResource(R.xml.settings_preferences, rootKey);
 
         Preference clearShowLessOftenPreference = findPreference(getString(R.string.clear_show_less_often_key));
         if (clearShowLessOftenPreference != null) {
@@ -57,9 +64,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         if (clearSubredditsDialog == null) {
             clearSubredditsDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()))
                     .setMessage(getString(R.string.clear_show_less_often_message))
-                    .setPositiveButton(android.R.string.yes, (dialogInterface, i) -> {
-                        System.out.println("'show less often' has been cleared for all your subreddits!!!");
-                    })
+                    .setPositiveButton(android.R.string.yes, (dialogInterface, i) -> AppExecutors.getInstance().diskIO().execute(() -> {
+                        AppDatabase.getInstance(getContext()).subredditDao().clearSubreddits();
+                        showSnackbar(R.string.show_less_often_subreddits_cleared);
+                    }))
                     .setNegativeButton(android.R.string.no, null)
                     .setCancelable(true);
         }
@@ -71,9 +79,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         if (clearBookmarksDialog == null) {
             clearBookmarksDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()))
                     .setMessage(getString(R.string.clear_bookmarks_message))
-                    .setPositiveButton(android.R.string.yes, (dialogInterface, i) -> {
-                        System.out.println("All bookmarked posts have been cleared!!!");
-                    })
+                    .setPositiveButton(android.R.string.yes, (dialogInterface, i) -> showSnackbar(R.string.bookmarks_cleared))
                     .setNegativeButton(android.R.string.no, null)
                     .setCancelable(true);
         }
@@ -108,6 +114,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         }
     }
 
+    private void showSnackbar(@StringRes int string) {
+        if (snackbar == null) {
+            snackbar = Snackbar.make(requireView(), string, Snackbar.LENGTH_LONG);
+        }
+        snackbar.show();
+    }
 
     @Override
     public void onResume() {

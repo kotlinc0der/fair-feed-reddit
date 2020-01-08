@@ -1,0 +1,17 @@
+<!-- Credit for image base64: https://icons8.com/ -->
+<!-- Credit for conversion to svg: https://base64.guru/converter/decode/image/svg -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:height="172dp"
+    android:width="172dp"
+    android:viewportHeight="172"
+    android:viewportWidth="172">
+    <path android:fillColor="#000000" android:fillType="nonZero"
+        android:pathData="M0,86c0,-47.496 38.504,-86 86,-86c47.496,0 86,38.504 86,86c0,47.496 -38.504,86 -86,86c-47.496,0 -86,-38.504 -86,-86zM86,161.68c41.797,0 75.68,-33.883 75.68,-75.68c0,-41.797 -33.883,-75.68 -75.68,-75.68c-41.797,0 -75.68,33.883 -75.68,75.68c0,41.797 33.883,75.68 75.68,75.68z"
+        android:strokeColor="#00000000" android:strokeLineCap="butt"
+        android:strokeLineJoin="miter" android:strokeWidth="1"/>
+
+    <path android:fillColor="#000000" android:fillType="nonZero"
+        android:pathData="M60.2,47.297v77.4h17.2v-51.063l15.319,-9.137h19.081v-17.2h-21.5c-0.269,-0.017 -0.538,-0.017 -0.806,0c-1.277,0.118 -2.52,0.538 -3.628,1.209l-8.466,5.106v-6.316z"
+        android:strokeColor="#00000000" android:strokeLineCap="butt"
+        android:strokeLineJoin="miter" android:strokeWidth="1"/>
+</vector>

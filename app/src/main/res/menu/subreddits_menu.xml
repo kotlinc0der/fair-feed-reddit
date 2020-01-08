@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <group
+            android:orderInCategory="1"
+            android:title="@string/filter"
+            app:showAsAction="ifRoom"
+            android:checkableBehavior="single">
+            <item
+                android:id="@+id/sort_all_subreddits"
+                android:title="@string/all"
+                android:orderInCategory="1"
+                android:checked="true"
+                app:showAsAction="never"/>
+
+            <item
+                android:id="@+id/sort_show_less_often_subreddits"
+                android:title="@string/show_less_often"
+                android:orderInCategory="2"
+                app:showAsAction="never" />
+        </group>
+</menu>

@@ -30,15 +30,31 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="title_settings">Settings</string>
-    <string name="logout_account_key">logout_account</string>
-    <string name="logout_account_title">Logout of reddit</string>
-    <string name="clear_bookmarked_posts_key">clear_bookmarked_posts</string>
-    <string name="clear_bookmarked_posts_title">Clear all bookmarked posts</string>
-    <string name="clear_show_less_often_key">clear_show_less_often</string>
-    <string name="clear_show_less_often_title">Clear subreddits</string>
-    <string name="show_less_often_posts_key">show_less_often_posts</string>
-    <string name="show_less_often_posts_title">Number of visible posts per day</string>
-    <string name="clear_bookmarks_message">Are you sure you want to clear all the bookmarked reddit posts?</string>
-    <string name="logout_message">Are you sure you want to logout of your reddit account?</string>
-    <string name="clear_show_less_often_message">Are you sure you want to clear \'show less often\' for all your subreddits?</string>
+    <string name="logout_account_key" translatable="false">logout_account</string>
+    <string name="logout_account_title" translatable="false">Logout of reddit</string>
+    <string name="clear_bookmarked_posts_key" translatable="false">clear_bookmarked_posts</string>
+    <string name="clear_bookmarked_posts_title" translatable="false">Clear all bookmarked posts</string>
+    <string name="clear_show_less_often_key" translatable="false">clear_show_less_often</string>
+    <string name="clear_show_less_often_title" translatable="false">Clear subreddits</string>
+    <string name="show_less_often_posts_key" translatable="false">show_less_often_posts</string>
+    <string name="show_less_often_posts_title" translatable="false">Number of visible posts per day</string>
+    <string name="clear_bookmarks_message" translatable="false">Are you sure you want to clear all the bookmarked reddit posts?</string>
+    <string name="logout_message" translatable="false">Are you sure you want to logout of your reddit account?</string>
+    <string name="clear_show_less_often_message" translatable="false">Are you sure you want to clear \'show less often\' for all your subreddits?</string>
+    <string name="title_subreddits" translatable="false">Subreddits</string>
+    <string name="title_activity_testing" translatable="false">Testing</string>
+    <string name="search_query_hint" translatable="false">Search…</string>
+    <string name="subreddit_actions_imagebutton" translatable="false">Subreddit Actions ImageButton</string>
+    <string name="all" translatable="false">All</string>
+    <string name="show_less_often">Show Less Often</string>
+    <string name="show_less_often_action" translatable="false">Show less often</string>
+    <string name="go_to_subreddit_action" translatable="false">Go to \'r/%s\'</string>
+    <string name="leave_subreddit_action" translatable="false">Leave \'r/%s\'</string>
+    <string name="show_more_often_action" translatable="false">Show more often</string>
+    <string name="filter" translatable="false">Filter</string>
+    <string name="no_show_less_often_subreddits" translatable="false">No \'show less often\' subreddits.</string>
+    <string name="check_internet" translatable="false">Check your internet connection and Retry.</string>
+    <string name="error_message" translatable="false">Error Occurred. Please Retry Again.</string>
+    <string name="bookmarks_cleared">All bookmarked posts have been cleared!!!</string>
+    <string name="show_less_often_subreddits_cleared">\'show less often\' subreddits have been cleared!</string>
 </resources>

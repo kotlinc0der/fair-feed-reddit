@@ -4,4 +4,9 @@
     <dimen name="splash_reddit_icon_margin_bottom">100dp</dimen>
     <dimen name="reddit_icon_height_weight">4</dimen>
     <dimen name="progress_bar_size">42dp</dimen>
+    <dimen name="scrollbarSize">4dp</dimen>
+    <dimen name="divider_height">1dp</dimen>
+    <dimen name="card_radius">8dp</dimen>
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="recycler_view_padding">0dp</dimen>
 </resources>
