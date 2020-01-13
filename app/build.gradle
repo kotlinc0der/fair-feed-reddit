@@ -35,6 +35,9 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
+    // Image Loader
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
     // Material Components
     implementation 'com.google.android.material:material:1.0.0'
 

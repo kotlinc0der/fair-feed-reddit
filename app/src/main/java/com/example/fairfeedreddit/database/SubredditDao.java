@@ -13,6 +13,9 @@ import java.util.List;
 @Dao
 public interface SubredditDao {
 
+    @Query("SELECT name FROM subreddit ORDER BY showLessOftenDate DESC")
+    List<String> loadShowLessOftenSubredditNames();
+
     @Query("SELECT * FROM subreddit ORDER BY showLessOftenDate DESC")
     LiveData<List<SubredditEntity>> loadShowLessOftenSubreddits();
 
@@ -22,9 +25,18 @@ public interface SubredditDao {
     @Delete
     void deleteSubreddit(SubredditEntity subredditEntity);
 
+    @Query("DELETE from subreddit where name = :name")
+    void deleteSubredditByName(String name);
+
     @Query("DELETE from subreddit")
     void clearSubreddits();
 
     @Query("select case when exists(select * from subreddit where id = :id) then 1 else 0 end")
     boolean isShowLessOftenSubreddit(String id);
+
+    @Query("select case when exists(select * from subreddit where name = :name) then 1 else 0 end")
+    boolean isShowLessOftenSubredditByName(String name);
+
+    @Query("SELECT * FROM subreddit where name = :subreddit")
+    SubredditEntity findSubredditByName(String subreddit);
 }

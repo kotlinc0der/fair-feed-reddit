@@ -2,6 +2,7 @@ package com.example.fairfeedreddit.model;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import net.dean.jraw.models.Subreddit;
@@ -22,6 +23,10 @@ public class SubredditEntity implements Serializable {
     private String url;
     private Integer subscriberCount;
     private Date showLessOftenDate;
+
+    @Ignore
+    private boolean shouldShowLessOften;
+
 
     public SubredditEntity(@NotNull String id, String name, String description, String url, Integer subscriberCount, Date showLessOftenDate) {
         this.id = id;
@@ -84,5 +89,13 @@ public class SubredditEntity implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public boolean shouldShowLessOften() {
+        return shouldShowLessOften;
+    }
+
+    public void setShouldShowLessOften(boolean shouldShowLessOften) {
+        this.shouldShowLessOften = shouldShowLessOften;
     }
 }

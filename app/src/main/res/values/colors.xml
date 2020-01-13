@@ -8,4 +8,5 @@
 
     <color name="scrollbarColor">#BA00574B</color>
     <color name="background_color">#f2f2f2</color>
+    <color name="textDarkPrimary">#AF000000</color> <!--DE for %87 opacity-->
 </resources>

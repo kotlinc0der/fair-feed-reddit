@@ -1,12 +1,9 @@
 <resources>
     <string name="app_name">Fair Feed Reddit</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_reddit_posts">Posts</string>
     <string name="title_notifications">Notifications</string>
 
     <string name="title_activity_login">LoginActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
 
     <string name="title_activity_splash">SplashActivity</string>
     <string name="login_to_reddit_account">Login to Reddit</string>
@@ -15,20 +12,6 @@
     <string name="reddit_redirect_url">http://www.example.com/my_redirect</string>
     <string name="title_activity_settings">Settings</string>
 
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="title_settings">Settings</string>
     <string name="logout_account_key" translatable="false">logout_account</string>
     <string name="logout_account_title" translatable="false">Logout of reddit</string>
@@ -57,4 +40,10 @@
     <string name="error_message" translatable="false">Error Occurred. Please Retry Again.</string>
     <string name="bookmarks_cleared">All bookmarked posts have been cleared!!!</string>
     <string name="show_less_often_subreddits_cleared">\'show less often\' subreddits have been cleared!</string>
+    <string name="reddit_post_actions_imagebutton">Reddit Post Actions ImageButton</string>
+    <string name="reddit_post_thumbnail">Reddit Post Thumbnail</string>
+    <string name="open_reddit_post">Open reddit post</string>
+    <string name="add_post_to_bookmarks">Add post to bookmarks</string>
+    <string name="leave_subreddit_message">Successfully left \'r/%s\'.</string>
+    <string name="remove_post_from_bookmarks">Remove post from Bookmarks</string>
 </resources>

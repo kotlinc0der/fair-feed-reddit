@@ -8,9 +8,10 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
+import com.example.fairfeedreddit.model.RedditPostEntity;
 import com.example.fairfeedreddit.model.SubredditEntity;
 
-@Database(entities = {SubredditEntity.class}, version = 1, exportSchema = false)
+@Database(entities = {SubredditEntity.class, RedditPostEntity.class}, version = 1, exportSchema = false)
 @TypeConverters(DateConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -36,4 +37,5 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract SubredditDao subredditDao();
 
+    public abstract RedditPostDao redditPostDao();
 }

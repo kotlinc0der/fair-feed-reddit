@@ -107,8 +107,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        System.out.printf("Shared preference '%s' has changed!!!!%n", key);
-
         if (SHOW_LESS_OFTEN_POSTS_KEY.equals(key)) {
             SharedPreferenceUtils.setShowLessOftenPosts(Integer.valueOf(sharedPreferences.getString(key, String.valueOf(DEFAULT_SHOW_LESS_OFTEN_POSTS))));
         }

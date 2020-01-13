@@ -89,6 +89,10 @@ public class SubredditsViewModel extends AndroidViewModel {
         subredditDao.deleteSubreddit(subredditEntity);
     }
 
+    boolean shouldShowLessOften(String id) {
+        return !subredditDao.isShowLessOftenSubreddit(id);
+    }
+
     int getSelectedMenuItemId() {
         return selectedMenuItemId;
     }
