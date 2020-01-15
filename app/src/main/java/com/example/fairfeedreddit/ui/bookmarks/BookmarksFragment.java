@@ -1,9 +1,10 @@
-package com.example.fairfeedreddit.ui.reddit_posts;
+package com.example.fairfeedreddit.ui.bookmarks;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +17,17 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.fairfeedreddit.App;
 import com.example.fairfeedreddit.R;
+import com.example.fairfeedreddit.adapter.BookmarksAdapter;
 import com.example.fairfeedreddit.adapter.OnRedditPostClickListener;
-import com.example.fairfeedreddit.adapter.RedditPostsAdapter;
 import com.example.fairfeedreddit.model.RedditPostEntity;
-import com.example.fairfeedreddit.ui.PagingScrollListener;
+import com.example.fairfeedreddit.ui.reddit_posts.RedditPostsBottomSheetDialog;
 import com.example.fairfeedreddit.utils.AppConstants;
 import com.example.fairfeedreddit.utils.AppExecutors;
 import com.example.fairfeedreddit.utils.CollectionUtils;
@@ -47,28 +48,24 @@ import static com.example.fairfeedreddit.utils.AppConstants.ADD_TO_BOOKMARKS_MES
 import static com.example.fairfeedreddit.utils.AppConstants.LEAVE_SUBREDDIT_MESSAGE;
 import static com.example.fairfeedreddit.utils.AppConstants.REMOVE_FROM_BOOKMARKS_MESSAGE;
 
-public class RedditPostsFragment extends Fragment implements SearchView.OnQueryTextListener,
-        OnRedditPostClickListener, SwipeRefreshLayout.OnRefreshListener, RedditPostsBottomSheetDialog.OnRedditPostActionItemClickListener {
+public class BookmarksFragment extends Fragment implements SearchView.OnQueryTextListener,
+        OnRedditPostClickListener, RedditPostsBottomSheetDialog.OnRedditPostActionItemClickListener {
 
-    private RedditPostsViewModel viewModel;
 
-    @BindView(R.id.reddit_posts_layout)
+    @BindView(R.id.bookmarks_layout)
     View redditPostsLayout;
 
-    @BindView(R.id.reddit_posts_sv)
+    @BindView(R.id.bookmarks_sv)
     SearchView searchView;
 
-    @BindView(R.id.reddit_posts_rv)
+    @BindView(R.id.bookmarks_rv)
     RecyclerView recyclerView;
 
     @BindView(R.id.error_msg_tv)
     TextView errorTV;
 
-    @BindView(R.id.reddit_posts_pb)
+    @BindView(R.id.bookmarks_pb)
     ProgressBar progressBar;
-
-    @BindView(R.id.swipe_refresh_layout)
-    SwipeRefreshLayout swipeRefreshLayout;
 
     @BindBool(R.bool.isTablet)
     boolean isTablet;
@@ -78,16 +75,18 @@ public class RedditPostsFragment extends Fragment implements SearchView.OnQueryT
 
     private Snackbar snackbar;
 
-    private boolean isLoading = false;
-    private RedditPostsAdapter adapter;
+    private Observer<List<RedditPostEntity>> bookmarksObserver;
+
     private Unbinder unbinder;
+    private BookmarksAdapter adapter;
+    private BookmarksViewModel viewModel;
     private RedditPostsBottomSheetDialog bottomSheetDialog;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_reddit_posts, container, false);
+        View root = inflater.inflate(R.layout.fragment_bookmarks, container, false);
         unbinder = ButterKnife.bind(this, root);
-        viewModel = ViewModelProviders.of(requireActivity()).get(RedditPostsViewModel.class);
+        viewModel = ViewModelProviders.of(requireActivity()).get(BookmarksViewModel.class);
         return root;
     }
 
@@ -105,41 +104,24 @@ public class RedditPostsFragment extends Fragment implements SearchView.OnQueryT
             recyclerView.smoothScrollToPosition(0);
         }));
 
-        searchView.setOnSearchClickListener(v -> System.out.println("OnSearchClickListener Triggered!!!!!"));
-        searchView.setOnClickListener(v -> hideKeyboardAndClearFocus(view));
+        searchView.setOnQueryTextListener(this);
+        searchView.setOnClickListener(v -> {
+            onQueryTextSubmit(searchView.getQuery().toString());
+            hideKeyboardAndClearFocus(view);
+        });
 
-        swipeRefreshLayout.setOnRefreshListener(this);
-
-        adapter = new RedditPostsAdapter(this);
+        adapter = new BookmarksAdapter(this);
 
         GridLayoutManager layoutManager = new GridLayoutManager(requireContext(), getSpanCount());
         recyclerView.setLayoutManager(layoutManager);
 
         recyclerView.setAdapter(adapter);
-        recyclerView.addOnScrollListener(new PagingScrollListener(layoutManager) {
-            @Override
-            protected void loadMoreItems() {
-                if (!isLoading && viewModel.moreRedditPostsExist()) {
-                    if (!NetworkUtils.isOnline(requireContext())) {
-                        showSnackbar(getString(R.string.check_internet));
-                        return;
-                    }
-                    loadRedditPosts(viewModel.getCurrentPage() + 1, false);
-                }
-            }
 
-            @Override
-            protected boolean isLoading() {
-                return isLoading;
-            }
-        });
-
-        if (NetworkUtils.isOnline(requireContext()) || viewModel.getRedditPosts().getValue() != null) {
-            loadRedditPosts(viewModel.getCurrentPage(), false);
-        } else if (CollectionUtils.isEmpty(viewModel.getRedditPosts().getValue())) {
-            showErrorMessage();
+        if (TextUtils.isEmpty(viewModel.getQuery())) {
+            queryBookmarksDatabase();
+        } else {
+            searchView.setQuery(viewModel.getQuery(), true);
         }
-
         clearSearchViewFocus();
     }
 
@@ -160,29 +142,6 @@ public class RedditPostsFragment extends Fragment implements SearchView.OnQueryT
         return spanCount;
     }
 
-    private void loadRedditPosts(int page, boolean isRefresh) {
-        hideErrorMessage();
-        if (!isRefresh) {
-            showProgressBar();
-        }
-        if (!viewModel.getRedditPosts().hasObservers()) {
-            viewModel.getRedditPosts(page, isRefresh).observe(this, redditPosts -> {
-                hideProgressBar();
-                if (CollectionUtils.isNonEmpty(redditPosts)) {
-                    updateRecyclerView(redditPosts);
-                } else if (viewModel.getCurrentPage() == 1 && CollectionUtils.isEmpty(viewModel.getRedditPosts().getValue())) {
-                    showErrorMessage();
-                } else if (!NetworkUtils.isOnline(requireContext())) {
-                    showSnackbar(getString(R.string.check_internet));
-                }
-                isLoading = false;
-                swipeRefreshLayout.setRefreshing(false);
-            });
-        } else {
-            viewModel.getRedditPosts(page, isRefresh);
-        }
-    }
-
     private void updateRecyclerView(List<RedditPostEntity> posts) {
         recyclerView.setVisibility(View.VISIBLE);
         adapter.setSubreddits(posts);
@@ -192,7 +151,7 @@ public class RedditPostsFragment extends Fragment implements SearchView.OnQueryT
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-        viewModel.getRedditPosts().removeObservers(this);
+        viewModel.getBookmarks().removeObservers(this);
         if (bottomSheetDialog != null)
             bottomSheetDialog.clearListener();
     }
@@ -214,12 +173,29 @@ public class RedditPostsFragment extends Fragment implements SearchView.OnQueryT
         });
     }
 
+    private void queryBookmarksDatabase() {
+        hideErrorMessage();
+        showProgressBar();
+        if (bookmarksObserver == null || !viewModel.getBookmarks().hasObservers()) {
+            bookmarksObserver = posts -> {
+                hideProgressBar();
+                if (CollectionUtils.isNonEmpty(posts)) {
+                    updateRecyclerView(posts);
+                } else {
+                    showErrorMessage();
+                }
+            };
+            viewModel.getBookmarks().observe(this, bookmarksObserver);
+        } else {
+            bookmarksObserver.onChanged(viewModel.getBookmarks().getValue());
+        }
+    }
+
     private void hideProgressBar() {
         progressBar.setVisibility(View.INVISIBLE);
     }
 
     private void showProgressBar() {
-        isLoading = true;
         progressBar.setVisibility(View.VISIBLE);
     }
 
@@ -227,7 +203,7 @@ public class RedditPostsFragment extends Fragment implements SearchView.OnQueryT
         recyclerView.setVisibility(View.INVISIBLE);
         searchView.setVisibility(View.INVISIBLE);
         errorTV.setVisibility(View.VISIBLE);
-        errorTV.setText(R.string.error_message);
+        errorTV.setText(R.string.no_bookmarks);
     }
 
     private void hideErrorMessage() {
@@ -238,6 +214,17 @@ public class RedditPostsFragment extends Fragment implements SearchView.OnQueryT
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        searchView.setEnabled(false);
+        hideErrorMessage();
+        showProgressBar();
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            List<RedditPostEntity> filteredBookmarks = viewModel.filterBookmarks(query);
+            requireActivity().runOnUiThread(() -> {
+                hideProgressBar();
+                updateRecyclerView(filteredBookmarks);
+                searchView.setEnabled(true);
+            });
+        });
         return false;
     }
 
@@ -273,15 +260,6 @@ public class RedditPostsFragment extends Fragment implements SearchView.OnQueryT
     }
 
     @Override
-    public void onRefresh() {
-        if (NetworkUtils.isOnline(requireContext()) || viewModel.getRedditPosts().getValue() != null) {
-            loadRedditPosts(1, true);
-        } else if (CollectionUtils.isEmpty(viewModel.getRedditPosts().getValue())) {
-            showErrorMessage();
-        }
-    }
-
-    @Override
     public void onActionItemClick(int id, RedditPostEntity redditPost) {
         bottomSheetDialog.dismiss();
         switch (id) {
@@ -290,13 +268,8 @@ public class RedditPostsFragment extends Fragment implements SearchView.OnQueryT
                 break;
             case R.id.add_post_to_bookmarks_action:
                 AppExecutors.getInstance().diskIO().execute(() -> {
-                    if (redditPost.isBookmarked()) {
-                        viewModel.removePostFromBookmarks(redditPost);
-                        redditPost.setBookmarked(false);
-                    } else {
-                        viewModel.addRedditPostToBookmarks(redditPost);
-                        redditPost.setBookmarked(true);
-                    }
+                    viewModel.removePostFromBookmarks(redditPost);
+                    redditPost.setBookmarked(false);
                     showSnackbar(redditPost.isBookmarked() ? ADD_TO_BOOKMARKS_MESSAGE :
                             REMOVE_FROM_BOOKMARKS_MESSAGE);
                 });

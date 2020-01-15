@@ -13,8 +13,8 @@ import java.util.List;
 @Dao
 public interface RedditPostDao {
 
-    @Query("SELECT id FROM reddit_post ORDER BY bookmarkDate DESC")
-    LiveData<List<String>> loadBookmarkIds();
+    @Query("SELECT * FROM reddit_post where title like '%' || :query || '%' ORDER BY bookmarkDate DESC")
+    List<RedditPostEntity> loadBookmarksByName(String query);
 
     @Query("SELECT * FROM reddit_post ORDER BY bookmarkDate DESC")
     LiveData<List<RedditPostEntity>> loadBookmarkedRedditPosts();

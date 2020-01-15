@@ -118,7 +118,10 @@ public class SubredditsFragment extends Fragment implements SearchView.OnQueryTe
         }
 
         Toolbar toolbar = requireActivity().findViewById(R.id.toolbar);
-        toolbar.setOnClickListener((v -> recyclerView.smoothScrollToPosition(0)));
+        toolbar.setOnClickListener((v -> {
+            clearSearchViewFocus();
+            recyclerView.smoothScrollToPosition(0);
+        }));
         toolbar.setOverflowIcon(overflowIcon);
 
         searchView.setOnSearchClickListener(v -> System.out.println("OnSearchClickListener Triggered!!!!!"));

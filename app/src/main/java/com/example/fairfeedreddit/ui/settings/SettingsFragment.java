@@ -79,7 +79,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         if (clearBookmarksDialog == null) {
             clearBookmarksDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()))
                     .setMessage(getString(R.string.clear_bookmarks_message))
-                    .setPositiveButton(android.R.string.yes, (dialogInterface, i) -> showSnackbar(R.string.bookmarks_cleared))
+                    .setPositiveButton(android.R.string.yes, (dialogInterface, i) ->
+                        AppExecutors.getInstance().diskIO().execute(() -> {
+                            AppDatabase.getInstance(getContext()).redditPostDao().clearBookmarkedRedditPosts();
+                            showSnackbar(R.string.bookmarks_cleared); }
+                        ))
                     .setNegativeButton(android.R.string.no, null)
                     .setCancelable(true);
         }

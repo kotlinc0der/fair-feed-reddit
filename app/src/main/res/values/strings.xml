@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Fair Feed Reddit</string>
     <string name="title_reddit_posts">Posts</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_bookmarks">Bookmarks</string>
 
     <string name="title_activity_login">LoginActivity</string>
 
@@ -38,12 +38,13 @@
     <string name="no_show_less_often_subreddits" translatable="false">No \'show less often\' subreddits.</string>
     <string name="check_internet" translatable="false">Check your internet connection and Retry.</string>
     <string name="error_message" translatable="false">Error Occurred. Please Retry Again.</string>
-    <string name="bookmarks_cleared">All bookmarked posts have been cleared!!!</string>
-    <string name="show_less_often_subreddits_cleared">\'show less often\' subreddits have been cleared!</string>
-    <string name="reddit_post_actions_imagebutton">Reddit Post Actions ImageButton</string>
-    <string name="reddit_post_thumbnail">Reddit Post Thumbnail</string>
-    <string name="open_reddit_post">Open reddit post</string>
-    <string name="add_post_to_bookmarks">Add post to bookmarks</string>
-    <string name="leave_subreddit_message">Successfully left \'r/%s\'.</string>
-    <string name="remove_post_from_bookmarks">Remove post from Bookmarks</string>
+    <string name="bookmarks_cleared" translatable="false">All bookmarked posts have been cleared!!!</string>
+    <string name="show_less_often_subreddits_cleared" translatable="false">\'show less often\' subreddits have been cleared!</string>
+    <string name="reddit_post_actions_imagebutton" translatable="false">Reddit Post Actions ImageButton</string>
+    <string name="reddit_post_thumbnail" translatable="false">Reddit Post Thumbnail</string>
+    <string name="open_reddit_post" translatable="false">Open reddit post</string>
+    <string name="add_post_to_bookmarks" translatable="false">Add post to bookmarks</string>
+    <string name="leave_subreddit_message" translatable="false">Successfully left \'r/%s\'.</string>
+    <string name="remove_post_from_bookmarks" translatable="false">Remove post from Bookmarks</string>
+    <string name="no_bookmarks" translatable="false">No bookmarked posts.</string>
 </resources>

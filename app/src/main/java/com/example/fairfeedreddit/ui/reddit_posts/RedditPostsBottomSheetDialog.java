@@ -99,7 +99,7 @@ public class RedditPostsBottomSheetDialog extends BottomSheetDialogFragment {
         });
     }
 
-    static RedditPostsBottomSheetDialog newInstance(OnRedditPostActionItemClickListener mListener) {
+    public static RedditPostsBottomSheetDialog newInstance(OnRedditPostActionItemClickListener mListener) {
         return new RedditPostsBottomSheetDialog(mListener);
     }
 
@@ -121,7 +121,7 @@ public class RedditPostsBottomSheetDialog extends BottomSheetDialogFragment {
         mListener.onActionItemClick(view.getId(), redditPost);
     }
 
-    void clearListener() {
+    public void clearListener() {
         this.mListener = null;
     }
 
