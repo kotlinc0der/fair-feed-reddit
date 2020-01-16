@@ -230,6 +230,9 @@ public class BookmarksFragment extends Fragment implements SearchView.OnQueryTex
 
     @Override
     public boolean onQueryTextChange(String newText) {
+        if (TextUtils.isEmpty(newText)) {
+            onQueryTextSubmit(newText);
+        }
         return false;
     }
 
@@ -247,9 +250,10 @@ public class BookmarksFragment extends Fragment implements SearchView.OnQueryTex
 
         AppExecutors.getInstance().diskIO().execute(() -> {
             Bundle args = new Bundle();
-            args.putBoolean(AppConstants.SHOW_LESS_OFTEN_POSTS_KEY, shouldShowLessOften(redditPost.getSubreddit()));
-            args.putBoolean(AppConstants.IS_POST_BOOKMARKED_KEY, viewModel.isPostBookmarked(redditPost.getId()));
             args.putSerializable(AppConstants.REDDIT_POST_KEY, redditPost);
+            args.putBoolean(AppConstants.IS_BOOKMARKS_VIEW_KEY, true);
+            args.putBoolean(AppConstants.IS_POST_BOOKMARKED_KEY, viewModel.isPostBookmarked(redditPost.getId()));
+            args.putBoolean(AppConstants.SHOW_LESS_OFTEN_POSTS_KEY, shouldShowLessOften(redditPost.getSubreddit()));
             bottomSheetDialog.setArguments(args);
             bottomSheetDialog.show(requireFragmentManager(), RedditPostsBottomSheetDialog.class.getName());
         });

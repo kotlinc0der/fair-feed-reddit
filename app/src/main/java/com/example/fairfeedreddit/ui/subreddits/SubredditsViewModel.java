@@ -25,6 +25,8 @@ import java.util.List;
 
 public class SubredditsViewModel extends AndroidViewModel {
 
+    private String query;
+    private List<SubredditEntity> filteredSubreddits;
     private Integer currentPage = 1;
     private int selectedMenuItemId = R.id.sort_all_subreddits;
     private SubredditDao subredditDao;
@@ -77,6 +79,37 @@ public class SubredditsViewModel extends AndroidViewModel {
         return subredditsLiveData;
     }
 
+    List<SubredditEntity> filterSubreddits(String query) {
+        this.query = query;
+        filteredSubreddits = new ArrayList<>();
+        boolean sortAllSubreddits = selectedMenuItemId == R.id.sort_all_subreddits;
+
+        if (subredditsLiveData.getValue() == null) {
+            return filteredSubreddits;
+        }
+
+        if (query.isEmpty()) {
+            filteredSubreddits = sortAllSubreddits ?
+                    subredditsLiveData.getValue() : showLessOftenSubreddits.getValue();
+            return filteredSubreddits;
+        }
+
+        if (!sortAllSubreddits) {
+            filteredSubreddits = subredditDao.loadSubredditsByName(query);
+            return filteredSubreddits;
+        }
+
+        for (SubredditEntity subreddit : subredditsLiveData.getValue()) {
+            boolean matchesName = subreddit.getName().toLowerCase().contains(query.toLowerCase());
+            boolean matchesDescription = subreddit.getDescription().toLowerCase().contains(query.toLowerCase());
+            if (matchesName || matchesDescription) {
+                filteredSubreddits.add(subreddit);
+            }
+        }
+
+        return filteredSubreddits;
+    }
+
     boolean moreSubredditsExist() {
         return iterator.hasNext();
     }
@@ -111,5 +144,13 @@ public class SubredditsViewModel extends AndroidViewModel {
 
     void setSelectedMenuItemId(int searchType) {
         this.selectedMenuItemId = searchType;
+    }
+
+    void clearQuery() {
+        this.query = "";
+    }
+
+    CharSequence getQuery() {
+        return query;
     }
 }

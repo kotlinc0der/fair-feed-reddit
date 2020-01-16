@@ -145,6 +145,7 @@ public class RedditPostsViewModel extends AndroidViewModel {
     }
 
     void addRedditPostToBookmarks(RedditPostEntity redditPost) {
+        redditPost.setBookmarkDate(new Date());
         redditPostsDao.insertRedditPost(redditPost);
     }
 
@@ -153,7 +154,7 @@ public class RedditPostsViewModel extends AndroidViewModel {
     }
 
     boolean shouldShowLessOften(String name) {
-        return !subredditDao.isShowLessOftenSubredditByName(name);
+        return subredditDao.shouldShowLessOften(name);
     }
 
     boolean isPostBookmarked(String id) {

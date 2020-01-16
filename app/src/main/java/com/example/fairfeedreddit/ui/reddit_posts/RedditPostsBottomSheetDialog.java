@@ -24,6 +24,7 @@ import butterknife.OnClick;
 import butterknife.Optional;
 import butterknife.Unbinder;
 
+import static com.example.fairfeedreddit.utils.AppConstants.IS_BOOKMARKS_VIEW_KEY;
 import static com.example.fairfeedreddit.utils.AppConstants.IS_POST_BOOKMARKED_KEY;
 import static com.example.fairfeedreddit.utils.AppConstants.REDDIT_POST_KEY;
 import static com.example.fairfeedreddit.utils.AppConstants.SHOW_LESS_OFTEN_POSTS_KEY;
@@ -50,6 +51,7 @@ public class RedditPostsBottomSheetDialog extends BottomSheetDialogFragment {
     private boolean shouldShowLessOften;
 
     private boolean isRedditPostBookmarked;
+    private boolean isBookmarksView;
 
     public RedditPostsBottomSheetDialog() {}
 
@@ -74,6 +76,7 @@ public class RedditPostsBottomSheetDialog extends BottomSheetDialogFragment {
             redditPost = (RedditPostEntity) getArguments().getSerializable(REDDIT_POST_KEY);
             shouldShowLessOften = getArguments().getBoolean(SHOW_LESS_OFTEN_POSTS_KEY);
             isRedditPostBookmarked = getArguments().getBoolean(IS_POST_BOOKMARKED_KEY);
+            isBookmarksView = getArguments().getBoolean(IS_BOOKMARKS_VIEW_KEY, false);
         }
 
         if (redditPost != null) {
@@ -82,6 +85,7 @@ public class RedditPostsBottomSheetDialog extends BottomSheetDialogFragment {
             goToSubredditTV.setText(String.format(getString(R.string.go_to_subreddit_action), subredditName));
             showLessOftenTV.setText(getString(shouldShowLessOften ? R.string.show_less_often_action : R.string.show_more_often_action));
             leaveSubredditTV.setText(String.format(getString(R.string.leave_subreddit_action), subredditName));
+            leaveSubredditTV.setVisibility(isBookmarksView ? View.GONE : View.VISIBLE);
             redditPost.setBookmarked(isRedditPostBookmarked);
             redditPost.setShouldShowLessOften(shouldShowLessOften);
         }

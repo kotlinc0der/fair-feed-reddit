@@ -64,7 +64,7 @@ public class BookmarksViewModel extends AndroidViewModel {
     }
 
     boolean shouldShowLessOften(String name) {
-        return !subredditDao.isShowLessOftenSubredditByName(name);
+        return subredditDao.shouldShowLessOften(name);
     }
 
     boolean isPostBookmarked(String id) {

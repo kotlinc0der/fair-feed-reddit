@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -125,7 +126,11 @@ public class SubredditsFragment extends Fragment implements SearchView.OnQueryTe
         toolbar.setOverflowIcon(overflowIcon);
 
         searchView.setOnSearchClickListener(v -> System.out.println("OnSearchClickListener Triggered!!!!!"));
-        searchView.setOnClickListener(v -> hideKeyboardAndClearFocus(view));
+        searchView.setOnClickListener(v -> {
+            onQueryTextSubmit(searchView.getQuery().toString());
+            hideKeyboardAndClearFocus(view);
+        });
+        searchView.setOnQueryTextListener(this);
 
         swipeRefreshLayout.setOnRefreshListener(this);
 
@@ -138,7 +143,7 @@ public class SubredditsFragment extends Fragment implements SearchView.OnQueryTe
         recyclerView.addOnScrollListener(new PagingScrollListener(layoutManager) {
             @Override
             protected void loadMoreItems() {
-                if (!isLoading && !isShowLessOftenSubredditsView() && viewModel.moreSubredditsExist()) {
+                if (!isLoading && !isShowLessOftenSubredditsView() && viewModel.moreSubredditsExist() && TextUtils.isEmpty(searchView.getQuery())) {
                     if (!NetworkUtils.isOnline(requireContext())) {
                         showSnackbar(getString(R.string.check_internet));
                         return;
@@ -153,15 +158,20 @@ public class SubredditsFragment extends Fragment implements SearchView.OnQueryTe
             }
         });
 
-        if (isShowLessOftenSubredditsView()) {
-            querySubredditsDatabase();
+        if (!TextUtils.isEmpty(viewModel.getQuery())) {
+            searchView.setQuery(viewModel.getQuery(), true);
         } else {
-            if (NetworkUtils.isOnline(requireContext()) || viewModel.getSubreddits().getValue() != null) {
-                loadSubreddits(viewModel.getSelectedMenuItemId(), viewModel.getCurrentPage(), false);
-            } else if (CollectionUtils.isEmpty(viewModel.getSubreddits().getValue())){
-                showErrorMessage(R.string.error_message);
+            if (isShowLessOftenSubredditsView()) {
+                querySubredditsDatabase();
+            } else {
+                if (NetworkUtils.isOnline(requireContext()) || viewModel.getSubreddits().getValue() != null) {
+                    loadSubreddits(viewModel.getSelectedMenuItemId(), viewModel.getCurrentPage(), false);
+                } else if (CollectionUtils.isEmpty(viewModel.getSubreddits().getValue())){
+                    showErrorMessage(R.string.error_message);
+                }
             }
         }
+
 
         clearSearchViewFocus();
     }
@@ -185,7 +195,9 @@ public class SubredditsFragment extends Fragment implements SearchView.OnQueryTe
 
     private void loadSubreddits(int searchType, int page, boolean isRefresh) {
         hideErrorMessage();
-        showProgressBar();
+        if (!isRefresh) {
+            showProgressBar();
+        }
         if (!viewModel.getSubreddits().hasObservers()) {
             viewModel.getSubreddits(searchType, page, isRefresh).observe(this, subreddits -> {
                 hideProgressBar();
@@ -196,7 +208,6 @@ public class SubredditsFragment extends Fragment implements SearchView.OnQueryTe
                 } else if (!NetworkUtils.isOnline(requireContext())) {
                     showSnackbar(getString(R.string.check_internet));
                 }
-                isLoading = false;
                 swipeRefreshLayout.setRefreshing(false);
             });
         } else {
@@ -243,6 +254,8 @@ public class SubredditsFragment extends Fragment implements SearchView.OnQueryTe
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
 
+        clearSearchView();
+
         if (itemId == R.id.sort_all_subreddits) {
             item.setChecked(true);
             loadSubreddits(itemId, 1, false);
@@ -257,6 +270,12 @@ public class SubredditsFragment extends Fragment implements SearchView.OnQueryTe
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void clearSearchView() {
+        viewModel.clearQuery();
+        searchView.setQuery("", false);
+        clearSearchViewFocus();
     }
 
     @Override
@@ -286,6 +305,7 @@ public class SubredditsFragment extends Fragment implements SearchView.OnQueryTe
 
     private void hideProgressBar() {
         progressBar.setVisibility(View.INVISIBLE);
+        isLoading = false;
     }
 
     private void showProgressBar() {
@@ -308,6 +328,17 @@ public class SubredditsFragment extends Fragment implements SearchView.OnQueryTe
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        searchView.setEnabled(false);
+        hideErrorMessage();
+        showProgressBar();
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            List<SubredditEntity> filteredSubreddits = viewModel.filterSubreddits(query);
+            requireActivity().runOnUiThread(() -> {
+                hideProgressBar();
+                updateRecyclerView(filteredSubreddits);
+                searchView.setEnabled(true);
+            });
+        });
         return false;
     }
 

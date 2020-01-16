@@ -34,9 +34,13 @@ public interface SubredditDao {
     @Query("select case when exists(select * from subreddit where id = :id) then 1 else 0 end")
     boolean isShowLessOftenSubreddit(String id);
 
-    @Query("select case when exists(select * from subreddit where name = :name) then 1 else 0 end")
-    boolean isShowLessOftenSubredditByName(String name);
+    @Query("select case when exists(select * from subreddit where name = :name) then 0 else 1 end")
+    boolean shouldShowLessOften(String name);
 
     @Query("SELECT * FROM subreddit where name = :subreddit")
     SubredditEntity findSubredditByName(String subreddit);
+
+    @Query("SELECT * FROM subreddit where name like '%' || :query || '%' OR " +
+            "description like '%' || :query || '%' ORDER BY showLessOftenDate DESC")
+    List<SubredditEntity> loadSubredditsByName(String query);
 }
