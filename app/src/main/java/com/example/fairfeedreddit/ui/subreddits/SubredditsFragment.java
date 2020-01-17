@@ -125,7 +125,6 @@ public class SubredditsFragment extends Fragment implements SearchView.OnQueryTe
         }));
         toolbar.setOverflowIcon(overflowIcon);
 
-        searchView.setOnSearchClickListener(v -> System.out.println("OnSearchClickListener Triggered!!!!!"));
         searchView.setOnClickListener(v -> {
             onQueryTextSubmit(searchView.getQuery().toString());
             hideKeyboardAndClearFocus(view);

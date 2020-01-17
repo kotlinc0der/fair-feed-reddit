@@ -67,7 +67,7 @@ public class BookmarksViewHolder extends RecyclerView.ViewHolder {
         adapter.onRedditPostClick(adapter.getRedditPosts().get(getAdapterPosition()));
     }
 
-    private static String parseCreatedAt(Date createdAt) {
+    public static String parseCreatedAt(Date createdAt) {
         Date current = new Date();
         long diff = current.getTime() - createdAt.getTime();
 

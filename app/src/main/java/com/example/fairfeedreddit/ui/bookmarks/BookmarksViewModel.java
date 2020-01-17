@@ -71,10 +71,6 @@ public class BookmarksViewModel extends AndroidViewModel {
         return redditPostsDao.isBookmarkedRedditPost(id);
     }
 
-    public List<RedditPostEntity> getFilteredBookmarks() {
-        return filteredBookmarks;
-    }
-
     String getQuery() {
         return query;
     }

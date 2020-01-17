@@ -1,0 +1,39 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <TextView
+        android:id="@+id/widget_title_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:background="@color/colorPrimary"
+        android:text="@string/title_bookmarks"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/widget_error_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:layout_centerInParent="true"
+        android:textAlignment="center"
+        android:visibility="invisible"
+        android:text="@string/add_post_to_bookmarks"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <ListView
+        android:id="@+id/widget_listView"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:dividerHeight="@dimen/divider_height"
+        android:layout_below="@id/widget_title_textView"/>
+</RelativeLayout>

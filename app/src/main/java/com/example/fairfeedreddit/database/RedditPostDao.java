@@ -30,4 +30,7 @@ public interface RedditPostDao {
 
     @Query("select case when exists(select * from reddit_post where id = :id) then 1 else 0 end")
     boolean isBookmarkedRedditPost(String id);
+
+    @Query("SELECT * FROM reddit_post ORDER BY bookmarkDate DESC")
+    List<RedditPostEntity> loadBookmarks();
 }

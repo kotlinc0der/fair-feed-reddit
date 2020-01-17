@@ -19,8 +19,8 @@
 
         <ImageView
             android:id="@+id/reddit_post_thumbnail_iv"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="@dimen/thumbnail_size"
+            android:layout_height="@dimen/thumbnail_size"
             android:scaleType="centerCrop"
             android:layout_marginStart="10dp"
             android:background="#cccccc"
@@ -41,7 +41,7 @@
             android:maxLines="2"
             android:ellipsize="end"
             android:textColor="@color/textDarkPrimary"
-            tools:text="Android news, reviews, tips, and discussions about rooting, tutorials, and apps. Generic discussion about phones/tablets is allowed, but technical-support and carrier-related issues should be asked in their respective subreddits!"
+            tools:text="@string/reddit_post_dummy_text"
             app:layout_constraintStart_toEndOf="@id/reddit_post_thumbnail_iv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
