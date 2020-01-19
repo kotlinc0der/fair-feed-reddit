@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fairfeedreddit.App;
 import com.example.fairfeedreddit.R;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import net.dean.jraw.oauth.StatefulAuthHelper;
 
@@ -50,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
                     webView.stopLoading();
                     webView.setVisibility(View.GONE);
                     new AuthenticateTask(LoginActivity.this, helper).execute(url);
+                    FirebaseAnalytics.getInstance(getApplicationContext()).logEvent(FirebaseAnalytics.Event.LOGIN, null);
                 }
             }
 

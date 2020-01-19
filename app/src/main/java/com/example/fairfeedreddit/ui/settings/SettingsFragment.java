@@ -11,9 +11,11 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.example.fairfeedreddit.App;
 import com.example.fairfeedreddit.R;
 import com.example.fairfeedreddit.database.AppDatabase;
+import com.example.fairfeedreddit.utils.AppConstants;
 import com.example.fairfeedreddit.utils.AppExecutors;
 import com.example.fairfeedreddit.utils.SharedPreferenceUtils;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.Objects;
 
@@ -26,6 +28,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     private AlertDialog.Builder clearBookmarksDialog;
     private AlertDialog.Builder logoutDialog;
 
+    private FirebaseAnalytics firebaseAnalytics;
+
     private Snackbar snackbar;
 
     public SettingsFragment() {}
@@ -34,6 +38,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings_preferences, rootKey);
+
+        firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext());
 
         Preference clearShowLessOftenPreference = findPreference(getString(R.string.clear_show_less_often_key));
         if (clearShowLessOftenPreference != null) {
@@ -67,6 +73,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                     .setPositiveButton(android.R.string.yes, (dialogInterface, i) -> AppExecutors.getInstance().diskIO().execute(() -> {
                         AppDatabase.getInstance(getContext()).subredditDao().clearSubreddits();
                         showSnackbar(R.string.show_less_often_subreddits_cleared);
+                        firebaseAnalytics.logEvent(AppConstants.CLEAR_SUBREDDITS_EVENT, null);
                     }))
                     .setNegativeButton(android.R.string.no, null)
                     .setCancelable(true);
@@ -82,8 +89,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                     .setPositiveButton(android.R.string.yes, (dialogInterface, i) ->
                         AppExecutors.getInstance().diskIO().execute(() -> {
                             AppDatabase.getInstance(getContext()).redditPostDao().clearBookmarkedRedditPosts();
-                            showSnackbar(R.string.bookmarks_cleared); }
-                        ))
+                            showSnackbar(R.string.bookmarks_cleared);
+                            firebaseAnalytics.logEvent(AppConstants.CLEAR_BOOKMARKS_EVENT, null);
+                        }))
                     .setNegativeButton(android.R.string.no, null)
                     .setCancelable(true);
         }
@@ -101,6 +109,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                         App.getTokenStore().persist();
                         SharedPreferenceUtils.setIsUserLogged(false);
                         Objects.requireNonNull(getActivity()).finish();
+                        firebaseAnalytics.logEvent(AppConstants.LOGOUT_EVENT, null);
                     })
                     .setNegativeButton(android.R.string.no, null)
                     .setCancelable(true);
@@ -113,6 +122,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (SHOW_LESS_OFTEN_POSTS_KEY.equals(key)) {
             SharedPreferenceUtils.setShowLessOftenPosts(Integer.valueOf(sharedPreferences.getString(key, String.valueOf(DEFAULT_SHOW_LESS_OFTEN_POSTS))));
+            firebaseAnalytics.logEvent(AppConstants.UPDATE_SHOW_LESS_OFTEN_EVENT, null);
         }
     }
 

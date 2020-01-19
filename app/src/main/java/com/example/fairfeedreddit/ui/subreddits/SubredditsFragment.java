@@ -39,6 +39,7 @@ import com.example.fairfeedreddit.utils.AppExecutors;
 import com.example.fairfeedreddit.utils.CollectionUtils;
 import com.example.fairfeedreddit.utils.NetworkUtils;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import net.dean.jraw.references.SubredditReference;
 
@@ -54,6 +55,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 import static com.example.fairfeedreddit.utils.AppConstants.LEAVE_SUBREDDIT_MESSAGE;
+import static com.example.fairfeedreddit.utils.AppConstants.SHOW_LESS_OFTEN_EVENT;
+import static com.example.fairfeedreddit.utils.AppConstants.SHOW_MORE_OFTEN_EVENT;
 
 public class SubredditsFragment extends Fragment implements SearchView.OnQueryTextListener,
         OnSubredditClickListener, SwipeRefreshLayout.OnRefreshListener, OnActionItemClickListener {
@@ -92,6 +95,8 @@ public class SubredditsFragment extends Fragment implements SearchView.OnQueryTe
 
     private Snackbar snackbar;
 
+    private FirebaseAnalytics firebaseAnalytics;
+
     private boolean isLoading = false;
     private SubredditsAdapter adapter;
     private Unbinder unbinder;
@@ -106,6 +111,8 @@ public class SubredditsFragment extends Fragment implements SearchView.OnQueryTe
         setHasOptionsMenu(true);
 
         viewModel = ViewModelProviders.of(requireActivity()).get(SubredditsViewModel.class);
+
+        firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext());
 
         return root;
     }
@@ -264,6 +271,7 @@ public class SubredditsFragment extends Fragment implements SearchView.OnQueryTe
             item.setChecked(true);
             viewModel.setSelectedMenuItemId(R.id.sort_show_less_often_subreddits);
             querySubredditsDatabase();
+            firebaseAnalytics.logEvent(AppConstants.SORT_SHOW_LESS_OFTEN_EVENT, null);
             return true;
         }
 
@@ -335,6 +343,7 @@ public class SubredditsFragment extends Fragment implements SearchView.OnQueryTe
                 hideProgressBar();
                 updateRecyclerView(filteredSubreddits);
                 searchView.setEnabled(true);
+                firebaseAnalytics.logEvent(AppConstants.SEARCH_USER_SUBREDDITS_EVENT, null);
             });
         });
         return false;
@@ -403,6 +412,8 @@ public class SubredditsFragment extends Fragment implements SearchView.OnQueryTe
                         viewModel.showMoreOftenSubreddit(subreddit);
                         subreddit.setShouldShowLessOften(true);
                     }
+                    firebaseAnalytics.logEvent(subreddit.shouldShowLessOften() ? SHOW_LESS_OFTEN_EVENT :
+                            SHOW_MORE_OFTEN_EVENT , null);
                 });
                 break;
             case R.id.leave_subreddit_action:
@@ -411,6 +422,7 @@ public class SubredditsFragment extends Fragment implements SearchView.OnQueryTe
                     subredditReference.unsubscribe();
                     viewModel.showMoreOftenSubreddit(subreddit);
                     showSnackbar(String.format(LEAVE_SUBREDDIT_MESSAGE, subreddit.getName()));
+                    firebaseAnalytics.logEvent(AppConstants.LEAVE_SUBREDDIT_EVENT, null);
                 });
                 break;
         }

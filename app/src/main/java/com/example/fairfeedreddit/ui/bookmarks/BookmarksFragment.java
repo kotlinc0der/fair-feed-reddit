@@ -33,6 +33,7 @@ import com.example.fairfeedreddit.utils.AppExecutors;
 import com.example.fairfeedreddit.utils.CollectionUtils;
 import com.example.fairfeedreddit.utils.NetworkUtils;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import net.dean.jraw.references.SubredditReference;
 
@@ -44,13 +45,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static com.example.fairfeedreddit.utils.AppConstants.ADD_TO_BOOKMARKS_EVENT;
 import static com.example.fairfeedreddit.utils.AppConstants.ADD_TO_BOOKMARKS_MESSAGE;
 import static com.example.fairfeedreddit.utils.AppConstants.LEAVE_SUBREDDIT_MESSAGE;
+import static com.example.fairfeedreddit.utils.AppConstants.REMOVE_FROM_BOOKMARKS_EVENT;
 import static com.example.fairfeedreddit.utils.AppConstants.REMOVE_FROM_BOOKMARKS_MESSAGE;
+import static com.example.fairfeedreddit.utils.AppConstants.SHOW_LESS_OFTEN_EVENT;
+import static com.example.fairfeedreddit.utils.AppConstants.SHOW_MORE_OFTEN_EVENT;
 
 public class BookmarksFragment extends Fragment implements SearchView.OnQueryTextListener,
         OnRedditPostClickListener, RedditPostsBottomSheetDialog.OnRedditPostActionItemClickListener {
-
 
     @BindView(R.id.bookmarks_layout)
     View redditPostsLayout;
@@ -82,11 +86,13 @@ public class BookmarksFragment extends Fragment implements SearchView.OnQueryTex
     private BookmarksViewModel viewModel;
     private RedditPostsBottomSheetDialog bottomSheetDialog;
 
+    private FirebaseAnalytics firebaseAnalytics;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_bookmarks, container, false);
         unbinder = ButterKnife.bind(this, root);
         viewModel = ViewModelProviders.of(requireActivity()).get(BookmarksViewModel.class);
+        firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext());
         return root;
     }
 
@@ -270,6 +276,8 @@ public class BookmarksFragment extends Fragment implements SearchView.OnQueryTex
                     redditPost.setBookmarked(false);
                     showSnackbar(redditPost.isBookmarked() ? ADD_TO_BOOKMARKS_MESSAGE :
                             REMOVE_FROM_BOOKMARKS_MESSAGE);
+                    firebaseAnalytics.logEvent(redditPost.isBookmarked() ? ADD_TO_BOOKMARKS_EVENT :
+                            REMOVE_FROM_BOOKMARKS_EVENT, null);
                 });
                 break;
             case R.id.go_to_subreddit_action:
@@ -285,6 +293,8 @@ public class BookmarksFragment extends Fragment implements SearchView.OnQueryTex
                     } else {
                         viewModel.showMoreOftenSubreddit(subreddit);
                     }
+                    firebaseAnalytics.logEvent(redditPost.shouldShowLessOften() ? SHOW_LESS_OFTEN_EVENT :
+                            SHOW_MORE_OFTEN_EVENT , null);
                 });
                 break;
             case R.id.leave_subreddit_action:
@@ -293,6 +303,7 @@ public class BookmarksFragment extends Fragment implements SearchView.OnQueryTex
                     subredditReference.unsubscribe();
                     viewModel.showMoreOftenSubreddit(redditPost.getSubreddit());
                     showSnackbar(String.format(LEAVE_SUBREDDIT_MESSAGE, redditPost.getSubreddit()));
+                    firebaseAnalytics.logEvent(AppConstants.LEAVE_SUBREDDIT_EVENT, null);
                 });
                 break;
         }

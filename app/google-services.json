@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "433052192275",
+    "firebase_url": "https://fair-feed-reddit.firebaseio.com",
+    "project_id": "fair-feed-reddit",
+    "storage_bucket": "fair-feed-reddit.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:433052192275:android:bf6720246656d5e60b39e6",
+        "android_client_info": {
+          "package_name": "com.example.fairfeedreddit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "433052192275-0oqt8kcqebsgpjtk5ecr444agjo935r4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fairfeedreddit",
+            "certificate_hash": "4a4900e652c94e9922dbde163cfb7271b5a8fd35"
+          }
+        },
+        {
+          "client_id": "433052192275-4gcr5srhmn4h24ntjl4rtlsebdmgt9i0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCimnepoe35xO8AKktQ_t8de0j1grWeO_w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "433052192275-4gcr5srhmn4h24ntjl4rtlsebdmgt9i0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
