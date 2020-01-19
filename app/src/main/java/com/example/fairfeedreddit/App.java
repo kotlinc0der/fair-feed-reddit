@@ -3,6 +3,8 @@ package com.example.fairfeedreddit;
 import android.app.Application;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+
 import net.dean.jraw.android.AndroidHelper;
 import net.dean.jraw.android.AppInfoProvider;
 import net.dean.jraw.android.ManifestAppInfoProvider;
@@ -14,6 +16,8 @@ import net.dean.jraw.oauth.AccountHelper;
 
 import java.util.UUID;
 
+import io.fabric.sdk.android.Fabric;
+
 // Credit to JRAW-Android library's example app for OAuth2.0 flow: https://github.com/mattbdean/JRAW-Android/tree/8d92fd555d165e98ae921994683888523d94f268/example-app
 public final class App extends Application {
 
@@ -23,6 +27,8 @@ public final class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Fabric.with(this, new Crashlytics());
 
         initializeTokenStore();
 
