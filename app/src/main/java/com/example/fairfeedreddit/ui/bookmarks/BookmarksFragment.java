@@ -149,7 +149,7 @@ public class BookmarksFragment extends Fragment implements SearchView.OnQueryTex
     }
 
     void updateRecyclerView(List<RedditPostEntity> posts) {
-        recyclerView.setVisibility(View.VISIBLE);
+        hideErrorMessage();
         adapter.setSubreddits(posts);
     }
 
