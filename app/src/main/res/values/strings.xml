@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Fair Feed Reddit</string>
-    <string name="title_reddit_posts">Posts</string>
+    <string name="title_reddit_posts">Home Feed</string>
     <string name="title_bookmarks">Bookmarks</string>
 
     <string name="title_activity_login">LoginActivity</string>
@@ -27,6 +27,7 @@
     <string name="title_subreddits" translatable="false">Subreddits</string>
     <string name="title_activity_testing" translatable="false">Testing</string>
     <string name="search_query_hint" translatable="false">Search…</string>
+    <string name="search_subreddits_query_hint" translatable="false">Search subreddits…</string>
     <string name="subreddit_actions_imagebutton" translatable="false">Subreddit Actions ImageButton</string>
     <string name="all" translatable="false">All</string>
     <string name="show_less_often">Show Less Often</string>
@@ -51,4 +52,6 @@
     <string name="add_widget">Add widget</string>
     <string name="reddit_post_dummy_text">Android news, reviews, tips, and discussions about rooting, tutorials, and apps. Generic discussion about phones/tablets is allowed, but technical-support and carrier-related issues should be asked in their respective subreddits!</string>
     <string name="bottom_divider_between_bookmarks">Bottom divider between bookmarks</string>
+    <string name="leave_subreddit">Leave</string>
+    <string name="join_subreddit">Join</string>
 </resources>

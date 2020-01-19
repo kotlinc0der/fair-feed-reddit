@@ -18,10 +18,12 @@ import com.example.fairfeedreddit.utils.SharedPreferenceUtils;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
+import net.dean.jraw.models.SubredditSearchSort;
 import net.dean.jraw.models.SubredditSort;
 import net.dean.jraw.models.TimePeriod;
 import net.dean.jraw.oauth.AccountHelper;
 import net.dean.jraw.pagination.DefaultPaginator;
+import net.dean.jraw.pagination.SubredditSearchPaginator;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -33,15 +35,20 @@ import java.util.Map;
 
 public class RedditPostsViewModel extends AndroidViewModel {
 
+    private String searchQuery;
+    private int sloLimit;
     private Integer currentPage = 1;
     private RedditPostDao redditPostsDao;
     private SubredditDao subredditDao;
     private List<Submission> submissions;
     private Iterator<Listing<Submission>> iterator;
     private MutableLiveData<List<RedditPostEntity>> redditPostsLiveData = new MutableLiveData<>();
-    private int sloLimit;
     private Map<String, List<Map.Entry<Integer, Integer>>> sloMap;
     private List<RedditPostEntity> redditPostEntities;
+
+    private int searchPage = 1;
+    private List<Subreddit> searchResults;
+    private Iterator<Listing<Subreddit>> searchResultsIterator;
 
     public RedditPostsViewModel(@NonNull Application application) {
         super(application);
@@ -50,16 +57,36 @@ public class RedditPostsViewModel extends AndroidViewModel {
         sloLimit = SharedPreferenceUtils.getShowLessOftenPosts();
     }
 
-    MutableLiveData<List<RedditPostEntity>> getRedditPosts(int page, boolean isRefresh) {
+    List<SubredditEntity> searchForSubreddits(String query, int page) {
+        List<SubredditEntity> subreddits = new ArrayList<>();
 
+        AccountHelper accountHelper = App.getAccountHelper();
+        checkIfAuthenticated(accountHelper);
+
+        if (page == 1) {
+            searchResults = new ArrayList<>();
+            SubredditSearchPaginator searchPaginator = accountHelper.getReddit().searchSubreddits().query(query).sorting(SubredditSearchSort.RELEVANCE).build();
+            searchResultsIterator = searchPaginator.iterator();
+        }
+
+        searchResults.addAll(searchResultsIterator.next());
+        for (Subreddit subreddit : searchResults) {
+            if (!subreddit.isNsfw()) {
+                subreddits.add(SubredditEntity.fromSubreddit(subreddit));
+            }
+        }
+        searchPage = page;
+        searchQuery = query;
+
+        return subreddits;
+    }
+
+    MutableLiveData<List<RedditPostEntity>> getRedditPosts(int page, boolean isRefresh) {
         if (redditPostsLiveData.getValue() == null || currentPage != page || isRefresh) {
             AppExecutors.getInstance().diskIO().execute(() -> {
 
                 AccountHelper accountHelper = App.getAccountHelper();
-                List<String> usernames = App.getTokenStore().getUsernames();
-                if (!accountHelper.isAuthenticated() && !usernames.isEmpty()) {
-                    accountHelper.trySwitchToUser(usernames.get(0));
-                }
+                checkIfAuthenticated(accountHelper);
 
                 if (page == 1) {
                     initSLOMap();
@@ -112,6 +139,13 @@ public class RedditPostsViewModel extends AndroidViewModel {
         return redditPostsLiveData;
     }
 
+    private void checkIfAuthenticated(AccountHelper accountHelper) {
+        List<String> usernames = App.getTokenStore().getUsernames();
+        if (!accountHelper.isAuthenticated() && !usernames.isEmpty()) {
+            accountHelper.trySwitchToUser(usernames.get(0));
+        }
+    }
+
     private void initSLOMap() {
         sloMap = new HashMap<>();
         List<String> sloSubredditNames = subredditDao.loadShowLessOftenSubredditNames();
@@ -159,5 +193,17 @@ public class RedditPostsViewModel extends AndroidViewModel {
 
     boolean isPostBookmarked(String id) {
         return redditPostsDao.isBookmarkedRedditPost(id);
+    }
+
+    String getSearchQuery() {
+        return searchQuery;
+    }
+
+    boolean moreSubredditsExist() {
+        return searchResultsIterator.hasNext();
+    }
+
+    int getSearchPage() {
+        return searchPage;
     }
 }

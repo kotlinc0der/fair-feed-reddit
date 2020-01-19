@@ -25,6 +25,9 @@ public class SubredditEntity implements Serializable {
     private Date showLessOftenDate;
 
     @Ignore
+    private boolean isUserSubscriber;
+
+    @Ignore
     private boolean shouldShowLessOften;
 
 
@@ -79,8 +82,10 @@ public class SubredditEntity implements Serializable {
     }
 
     public static SubredditEntity fromSubreddit(Subreddit subreddit) {
-        return new SubredditEntity(subreddit.getId(), subreddit.getName(), subreddit.getPublicDescription(),
+        SubredditEntity subredditEntity = new SubredditEntity(subreddit.getId(), subreddit.getName(), subreddit.getPublicDescription(),
                 subreddit.getUrl(), subreddit.getSubscribers(), new Date());
+        subredditEntity.setIsUserSubscriber(subreddit.isUserSubscriber());
+        return subredditEntity;
     }
 
     public String getUrl() {
@@ -97,5 +102,13 @@ public class SubredditEntity implements Serializable {
 
     public void setShouldShowLessOften(boolean shouldShowLessOften) {
         this.shouldShowLessOften = shouldShowLessOften;
+    }
+
+    public boolean isUserSubscriber() {
+        return isUserSubscriber;
+    }
+
+    public void setIsUserSubscriber(boolean isUserSubscriber) {
+        this.isUserSubscriber = isUserSubscriber;
     }
 }

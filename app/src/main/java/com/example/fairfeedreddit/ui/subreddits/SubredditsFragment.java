@@ -171,7 +171,6 @@ public class SubredditsFragment extends Fragment implements SearchView.OnQueryTe
             }
         }
 
-
         clearSearchViewFocus();
     }
 

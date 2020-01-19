@@ -16,9 +16,9 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/search_view_border"
         android:iconifiedByDefault="false"
-        android:queryHint="@string/search_query_hint"
+        android:queryHint="@string/search_subreddits_query_hint"
         app:iconifiedByDefault="false"
-        app:queryHint="@string/search_query_hint"
+        app:queryHint="@string/search_subreddits_query_hint"
         app:layout_constraintTop_toTopOf="parent"
         app:queryBackground="@android:color/transparent" />
 

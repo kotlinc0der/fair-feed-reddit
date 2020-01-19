@@ -26,7 +26,6 @@ import java.util.List;
 public class SubredditsViewModel extends AndroidViewModel {
 
     private String query;
-    private List<SubredditEntity> filteredSubreddits;
     private Integer currentPage = 1;
     private int selectedMenuItemId = R.id.sort_all_subreddits;
     private SubredditDao subredditDao;
@@ -81,7 +80,7 @@ public class SubredditsViewModel extends AndroidViewModel {
 
     List<SubredditEntity> filterSubreddits(String query) {
         this.query = query;
-        filteredSubreddits = new ArrayList<>();
+        List<SubredditEntity> filteredSubreddits = new ArrayList<>();
         boolean sortAllSubreddits = selectedMenuItemId == R.id.sort_all_subreddits;
 
         if (subredditsLiveData.getValue() == null) {

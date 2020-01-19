@@ -48,6 +48,10 @@ dependencies {
     // Reddit Client
     implementation 'net.dean.jraw:JRAW-Android:1.1.0'
 
+    // Firebase
+    implementation 'com.google.firebase:firebase-core:17.2.1'
+    implementation 'com.google.firebase:firebase-analytics:17.2.1'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

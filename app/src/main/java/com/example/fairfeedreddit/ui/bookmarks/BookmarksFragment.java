@@ -142,7 +142,7 @@ public class BookmarksFragment extends Fragment implements SearchView.OnQueryTex
         return spanCount;
     }
 
-    private void updateRecyclerView(List<RedditPostEntity> posts) {
+    void updateRecyclerView(List<RedditPostEntity> posts) {
         recyclerView.setVisibility(View.VISIBLE);
         adapter.setSubreddits(posts);
     }
@@ -191,11 +191,11 @@ public class BookmarksFragment extends Fragment implements SearchView.OnQueryTex
         }
     }
 
-    private void hideProgressBar() {
+    void hideProgressBar() {
         progressBar.setVisibility(View.INVISIBLE);
     }
 
-    private void showProgressBar() {
+    void showProgressBar() {
         progressBar.setVisibility(View.VISIBLE);
     }
 
@@ -206,7 +206,7 @@ public class BookmarksFragment extends Fragment implements SearchView.OnQueryTex
         errorTV.setText(R.string.no_bookmarks);
     }
 
-    private void hideErrorMessage() {
+    void hideErrorMessage() {
         errorTV.setVisibility(View.INVISIBLE);
         searchView.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.VISIBLE);
@@ -214,18 +214,12 @@ public class BookmarksFragment extends Fragment implements SearchView.OnQueryTex
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        searchView.setEnabled(false);
-        hideErrorMessage();
-        showProgressBar();
-        AppExecutors.getInstance().diskIO().execute(() -> {
-            List<RedditPostEntity> filteredBookmarks = viewModel.filterBookmarks(query);
-            requireActivity().runOnUiThread(() -> {
-                hideProgressBar();
-                updateRecyclerView(filteredBookmarks);
-                searchView.setEnabled(true);
-            });
-        });
+        new SearchBookmarksTask(this).execute(query);
         return false;
+    }
+
+    List<RedditPostEntity> filterBookmarks(String query) {
+        return viewModel.filterBookmarks(query);
     }
 
     @Override
